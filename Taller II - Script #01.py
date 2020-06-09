@@ -52,8 +52,7 @@ plt.show()
 
 # %%: distribución normal
 total = len(ds2015)
-partial = len(ds2015[(ds2015.PuntajeFelicidad >= 4) &
-             (ds2015.PuntajeFelicidad < 6)])
+partial = len(ds2015[(ds2015.PuntajeFelicidad >= 4) & (ds2015.PuntajeFelicidad < 6)])
 print("Ocurrencias entre 4 a 6: %.2f %%" % (partial / total * 100))
 
 
