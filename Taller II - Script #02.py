@@ -128,6 +128,7 @@ plt.show()
 
 
 # %%: composición de la felicidad entre mejor y peor decil de alfabetización
+
 # ordenar x alfabetización
 dsDeciles = dsCombinado.sort_values("AlfabetizGral", ascending=False)
 
@@ -140,31 +141,38 @@ dsDeciles['Decil'] = series
 dsDeciles = dsDeciles[(dsDeciles.Decil == 1) | (dsDeciles.Decil == 10)]
 
 # calcular promedios
-economiaList = []; familiaList = []; expectVidaList = []; libertadList = []
-institucionesList = []; generosidadList = []; justiciaList = []
+lstEconomia = []; lstFamilia = []; lstExpectVida = []; lstLibertad = []
+lstInstituciones = []; lstGenerosidad = []; lstJusticia = []
 
 for number in [1, 10]:   
-    dsDecil = dsDeciles[dsDeciles.Decil == number] # todos los datos del decil
+    dsDecil = dsDeciles[dsDeciles.Decil == number] # los datos del decil
 
-    economiaList.append(sum(dsDecil.Economia) / len(dsDecil))
-    familiaList.append(sum(dsDecil.Familia) / len(dsDecil))
-    expectVidaList.append(sum(dsDecil.ExpectVida) / len(dsDecil))
-    libertadList.append(sum(dsDecil.Libertad) / len(dsDecil))
-    institucionesList.append(sum(dsDecil.Instituciones) / len(dsDecil))
-    generosidadList.append(sum(dsDecil.Generosidad) / len(dsDecil))
-    justiciaList.append(sum(dsDecil.Justicia) / len(dsDecil))
+    lstEconomia.append(sum(dsDecil.Economia) / len(dsDecil))
+    lstFamilia.append(sum(dsDecil.Familia) / len(dsDecil))
+    lstExpectVida.append(sum(dsDecil.ExpectVida) / len(dsDecil))
+    lstLibertad.append(sum(dsDecil.Libertad) / len(dsDecil))
+    lstInstituciones.append(sum(dsDecil.Instituciones) / len(dsDecil))
+    lstGenerosidad.append(sum(dsDecil.Generosidad) / len(dsDecil))
+    lstJusticia.append(sum(dsDecil.Justicia) / len(dsDecil))
 
-dsBarPlot = pd.DataFrame({'Economia':economiaList, 'Familia':familiaList,
-    'ExpectVida':expectVidaList, 'Libertad':libertadList, 'Instituciones':institucionesList,
-    'Generosidad':generosidadList, 'Justicia':justiciaList}, index=['Decil 1','Decil 10'])
+# armar el nuevo dataframe
+dsBarPlot = pd.DataFrame(index=['Decil 1','Decil 10'], data={ 
+    'Economia':lstEconomia, 'Familia':lstFamilia, 'ExpectVida':lstExpectVida,
+    'Libertad':lstLibertad, 'Instituciones':lstInstituciones,
+    'Generosidad':lstGenerosidad, 'Justicia':lstJusticia })
+dsBarPlot
 
-# gráfico de barras
-plt.figure(figsize=(12,8))
+
+# %%: gráfico de barras
+plt.figure(figsize=(10,8))
+plt.rcParams.update({'axes.titlesize': 'large'})
 title = 'Composición de la felicidad entre mejor y peor decil de alfabetización'
+
 dsBarPlot.plot(kind='bar', stacked=False, figsize=(12,6), rot=0, title=title, fontsize=12)
 plt.show()
 
-# gráfico de barras apiladas
+
+# %%: gráfico de barras apiladas
 # f, ax = plt.subplots(figsize=(10,2))
 
 # sns.set(style="whitegrid")
