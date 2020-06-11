@@ -1,8 +1,10 @@
-# %% carga de las librerías
+# %%: carga de las librerías
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt         # visualizacion de datos
-import seaborn as sns                   # visualizacion de datos
+import matplotlib.pyplot as plt     # visualizacion de datos
+import seaborn as sns               # visualizacion de datos
+
+sns.set(style="whitegrid")          # cuadrícula de fondo
 
 
 # %%: carga y limpieza de los datos
@@ -127,7 +129,7 @@ plt.pie(lsTotals, labels=labels, colors=colors, autopct='%1.1f%%')
 plt.show()
 
 
-# %%: composición de la felicidad entre mejor y peor decil de alfabetización
+# %%: composición de la felicidad para mejor y peor decil de alfabetización
 
 # ordenar x alfabetización
 dsDeciles = dsCombinado.sort_values("AlfabetizGral", ascending=False)
@@ -164,18 +166,24 @@ dsBarPlot
 
 
 # %%: gráfico de barras
-plt.figure(figsize=(10,8))
-plt.rcParams.update({'axes.titlesize': 'large'})
-title = 'Composición de la felicidad entre mejor y peor decil de alfabetización'
+plt.figure()
+plt.rcParams.update({'axes.titlesize':'x-large'})   # fontsize de los titulos
+title = 'Composición de la felicidad para mejor y peor decil de alfabetización'
+dsBarPlot.plot(kind='bar', stacked=False, figsize=(12,6), rot=0, title=title, fontsize=14)
+plt.show()
 
-dsBarPlot.plot(kind='bar', stacked=False, figsize=(12,6), rot=0, title=title, fontsize=12)
+
+# %%: gráfico de barras apiladas
+plt.figure()
+plt.rcParams.update({'axes.titlesize':'x-large'})   # fontsize de los titulos
+title = 'Composición de la felicidad para mejor y peor decil de alfabetización'
+dsBarPlot.plot(kind='barh', stacked=True, figsize=(11,3.8), rot=0, title=title, fontsize=14)
 plt.show()
 
 
 # %%: gráfico de barras apiladas
 # f, ax = plt.subplots(figsize=(10,2))
 
-# sns.set(style="whitegrid")
 # sns.barplot(data=dsBarPlot, x='Familia', y=dsBarPlot.index, color='orange', orient='h', label='Familia')
 # sns.barplot(data=dsBarPlot, x='Economia', y=dsBarPlot.index, color='blue', orient='h', label='Economia')
 # sns.barplot(data=dsBarPlot, x='ExpectVida', y='Decil', color='green', orient='h', label='ExpectVida')
