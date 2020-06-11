@@ -25,7 +25,7 @@ dsCombinado.dropna(inplace = True)
 
 # normalizar los datos (rango de 0 a 1)
 dsCombinado.PuntajeFelicidad = dsCombinado.PuntajeFelicidad / max(dsCombinado.PuntajeFelicidad)
-dsCombinado.head(10)
+dsCombinado.head()
 
 
 # %%: visualizar mediante histogramas
@@ -111,15 +111,12 @@ plt.pie(dsPieChart.values, labels=dsPieChart.columns, autopct='%1.1f%%')
 plt.show()
 
 
-# %%: deterioro vs mejora en alfabetización
-dsIgual = dsCombinado[dsCombinado.AlfabetizJov == dsCombinado.AlfabetizGral]
-dsMejora = dsCombinado[dsCombinado.AlfabetizJov > dsCombinado.AlfabetizGral]
-dsDeterioro = dsCombinado[dsCombinado.AlfabetizJov < dsCombinado.AlfabetizGral]
+# %%: deterioro  vs mejora en alfabetización
+dsIgual = dsCombinado[dsCombinado.AlfabetizJov == dsCombinado.AlfabetizGral] # 27
+dsMejora = dsCombinado[dsCombinado.AlfabetizJov > dsCombinado.AlfabetizGral] # 125
+dsDeterioro = dsCombinado[dsCombinado.AlfabetizJov < dsCombinado.AlfabetizGral] # 2
 
-lsTotals = []
-lsTotals.append(len(dsIgual))       # 27
-lsTotals.append(len(dsMejora))      # 125
-lsTotals.append(len(dsDeterioro))   # 2
+lsTotals = [len(dsIgual), len(dsMejora), len(dsDeterioro)]
 labels = ['Igual','Mejora','Deterioro']
 colors = ['Blue','Green','Red']
 
@@ -131,31 +128,24 @@ plt.show()
 
 
 # %%: composición de la felicidad entre mejor y peor decil de alfabetización
-
 # ordenar x alfabetización
-newIndex = (dsCombinado.AlfabetizGral.sort_values(ascending=False)).index.values
-dsDeciles = dsCombinado.reindex(newIndex)
+dsDeciles = dsCombinado.sort_values("AlfabetizGral", ascending=False)
 
 # asignar & separar por deciles
-serie = []
+series = []
 length = len(dsDeciles) * 0.1
+for i in range(len(dsCombinado)): series.append(int(i / length) + 1)
 
-for i in range(len(dsCombinado)):
-    serie.append(int(i / length) + 1)
-
-dsDeciles['Decil'] = serie
+dsDeciles['Decil'] = series
 dsDeciles = dsDeciles[(dsDeciles.Decil == 1) | (dsDeciles.Decil == 10)]
 
 # calcular promedios
 economiaList = []; familiaList = []; expectVidaList = []; libertadList = []
 institucionesList = []; generosidadList = []; justiciaList = []
 
-serie = [1, 10]
-for number in serie:
-    # seleccionar todo el decil
-    dsDecil = dsDeciles[dsDeciles.Decil == number]
-    
-    # calcular promedio
+for number in [1, 10]:   
+    dsDecil = dsDeciles[dsDeciles.Decil == number] # todos los datos del decil
+
     economiaList.append(sum(dsDecil.Economia) / len(dsDecil))
     familiaList.append(sum(dsDecil.Familia) / len(dsDecil))
     expectVidaList.append(sum(dsDecil.ExpectVida) / len(dsDecil))
@@ -164,19 +154,29 @@ for number in serie:
     generosidadList.append(sum(dsDecil.Generosidad) / len(dsDecil))
     justiciaList.append(sum(dsDecil.Justicia) / len(dsDecil))
 
-# gráfico de barras
-f, ax = plt.subplots(figsize=(9,6))
-# plt.xticks(rotation=90)
-serie = ['Primer Decil','Ultimo Decil']
-sns.barplot(x=serie, y=economiaList, color='blue', label="Economia")
-sns.barplot(x=serie, y=familiaList, color='orange', label="Familia")
-sns.barplot(x=serie, y=expectVidaList, color='green', label="ExpectVida")
-sns.barplot(x=serie, y=libertadList, color='red', label="Libertad")
-sns.barplot(x=serie, y=institucionesList, color='yellow', label="Instituciones")
-sns.barplot(x=serie, y=generosidadList, color='cyan', label="Generosidad")
-sns.barplot(x=serie, y=justiciaList, color='black', label="Justicia")
+dsBarPlot = pd.DataFrame({'Economia':economiaList, 'Familia':familiaList,
+    'ExpectVida':expectVidaList, 'Libertad':libertadList, 'Instituciones':institucionesList,
+    'Generosidad':generosidadList, 'Justicia':justiciaList}, index=['Decil 1','Decil 10'])
 
-ax.set(title='Composición de la felicidad entre mejor y peor decil de alfabetización')
-ax.set(xlabel='Componentes', ylabel='Deciles') # , labels=labels
-ax.legend(loc="best") # lower right
+# gráfico de barras
+plt.figure(figsize=(12,8))
+title = 'Composición de la felicidad entre mejor y peor decil de alfabetización'
+dsBarPlot.plot(kind='bar', stacked=False, figsize=(12,6), rot=0, title=title, fontsize=12)
 plt.show()
+
+# gráfico de barras apiladas
+# f, ax = plt.subplots(figsize=(10,2))
+
+# sns.set(style="whitegrid")
+# sns.barplot(data=dsBarPlot, x='Familia', y=dsBarPlot.index, color='orange', orient='h', label='Familia')
+# sns.barplot(data=dsBarPlot, x='Economia', y=dsBarPlot.index, color='blue', orient='h', label='Economia')
+# sns.barplot(data=dsBarPlot, x='ExpectVida', y='Decil', color='green', orient='h', label='ExpectVida')
+# sns.barplot(data=dsBarPlot, x='Libertad', y='Decil', color='red', orient='h', label='Libertad')
+# sns.barplot(data=dsBarPlot, x='Instituciones', y='Decil', color='yellow', orient='h', label='Instituciones')
+# sns.barplot(data=dsBarPlot, x='Generosidad', y='Decil', color='cyan', orient='h', label='Generosidad')
+# sns.barplot(data=dsBarPlot, x='Justicia', y='Decil', color='black', orient='h', label='Justicia')
+
+# ax.legend(ncol=4, bbox_to_anchor=(0.85,-0.4))
+# ax.set(xlabel='Componentes', ylabel='Deciles')
+# ax.set_title('Composición de la felicidad entre mejor y peor decil de alfabetización', fontsize=16, pad=20)
+# plt.show()
