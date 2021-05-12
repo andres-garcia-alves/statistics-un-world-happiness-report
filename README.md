@@ -1,6 +1,8 @@
 # World Happiness Report
 
-A statistical analysis mainly over the 'UN: World Happiness Report' data.
+A statistical analysis mainly over the 'UN: World Happiness Report' data.  
+
+Built in Python, using the numpy, pandas, statsmodels, matplotlib, seaborn and yellowbrick libraries for statistical validations and ploting.
 
 &nbsp;
 
