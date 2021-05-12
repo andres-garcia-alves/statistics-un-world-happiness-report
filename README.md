@@ -1,8 +1,9 @@
 # World Happiness Report
 
 A statistical analysis mainly over the 'UN: World Happiness Report' data.  
+https://worldhappiness.report
 
-Built in Python, using the numpy, pandas, statsmodels, matplotlib, seaborn and yellowbrick libraries for statistical validations and ploting.
+Built in Python, using: numpy, pandas, statsmodels, matplotlib, seaborn and yellowbrick libraries for statistical validations and ploting.
 
 &nbsp;
 
